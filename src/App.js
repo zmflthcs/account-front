@@ -1,23 +1,30 @@
-import logo from './logo.svg';
+import React from 'react';
+import NavBar from './components/NavBar';
 import './App.css';
+import AccountContainer from './containers/AccountContainer';
+import OptionContainer from './containers/OptionContainer';
+import AddRecord from './page/AddRecord';
+import { Route, useLocation } from 'react-router-dom';
+import Categories from './page/Categories';
+import Login from './page/Login';
+import { makeStyles } from '@material-ui/core/styles';
+import OauthHandler from './components/login/OauthHandler';
 
-function App() {
+const App=()=> {
+  const location = useLocation();
+  if(location.pathname==='/login'){
+    return(<Login/>)
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Route path={["/","/addrecord","/categories"]} component={NavBar}></Route>
+      <div>
+        <Route exact path='/' component={OptionContainer}></Route>
+        <Route exact path='/' component={AccountContainer}/>
+        <Route exact path='/addrecord' component={AddRecord}/>
+        <Route exact path='/categories' component={Categories}/>
+        <Route component={OauthHandler} path="/oauth/kakao"/>
+      </div>
     </div>
   );
 }
