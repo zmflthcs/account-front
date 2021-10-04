@@ -20,8 +20,6 @@ const AddRecordInput= ({columns, type, addRecord, categories}) => {
             window.alert('사용내역을 입력하셔야 합니다')
         } else{
             addRecord(content,selectedCategory,cost,memo)
-            
-        
             setSelectedCategory('')
             setContent('');
             setMemo('');

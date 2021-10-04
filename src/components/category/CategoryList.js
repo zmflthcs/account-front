@@ -52,6 +52,7 @@ export default function CategoryList({categories,type, addCategory,removeCategor
                     {column.label}
                   </TableCell>
                 ))}
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
                 <TableBody>
@@ -72,11 +73,11 @@ export default function CategoryList({categories,type, addCategory,removeCategor
           
            
            
-              <AddCategoryInput type={type} addCategory={addCategory}/>
+              
             </TableBody>
           </Table>
         </TableContainer>
-            
+        <AddCategoryInput type={type} addCategory={addCategory}/>
       </Paper>
     );
   }

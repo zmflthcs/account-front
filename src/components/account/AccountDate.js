@@ -18,8 +18,8 @@ export default function AccountDate({labelName, setDate, date}) {
   const classes = useStyles();
   
   const onChangeDate = (e)=> {
-    console.log(e.target.value);
     setDate(e.target.value)
+ 
   }
 
   return (

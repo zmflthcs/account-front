@@ -43,8 +43,8 @@ function* uploadRecordSaga({payload}) {
 }
 
 const initialState = {
-    expenseList: [{content: '과일맛있정', category:'35', cost: 20000, memo:'우리집 앞에서 삼'}],
-    incomeList: [{content: '월급임', category:'35', cost: 21245124, memo: '개꿀'}],
+    expenseList: [],
+    incomeList: [],
     date: ''
 };
 

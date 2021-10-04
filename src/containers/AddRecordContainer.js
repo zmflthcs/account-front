@@ -1,8 +1,8 @@
-import React, {useEffect, useState, useReducer} from 'react';
+import React, {useEffect} from 'react';
 import {connect} from 'react-redux';
 import AddRecordDate from '../components/account/AddRecordDate';
 import AddRecordTab from '../components/account/AddRecordTab';
-import {getCategories} from '../modules/account';
+import {getCategories} from '../modules/category';
 import {uploadRecord} from '../modules/addRecord';
 import Button from '@material-ui/core/Button';
 import {addExpenseList, addIncomeList, removeExpenseList, removeIncomeList, setDate} from '../modules/addRecord';
@@ -31,9 +31,8 @@ const AddRecordContainer = ({categories, date, getCategories, incomeList, expens
         getCategories();
       },[getCategories]);
       
-    
     return (
-        <>
+    <>
     <AddRecordDate date={date} onChangeDate={setDate}/>
     <AddRecordTab categories={categories} expenseList={expenseList} addExpenseList={addExpenseList}
     incomeList={incomeList}
@@ -47,8 +46,8 @@ const AddRecordContainer = ({categories, date, getCategories, incomeList, expens
 }
 
 export default connect(
-    ({account, addRecord}) => {return ({
-        categories: account.categories,
+    ({category, addRecord}) => {return ({
+        categories: category.categories,
         expenseList: addRecord.expenseList,
         incomeList: addRecord.incomeList,
         date: addRecord.date

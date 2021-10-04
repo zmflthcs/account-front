@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -45,9 +45,14 @@ function TabPanel(props) {
       flexGrow: 1,
       backgroundColor: theme.palette.background.paper,
     },
+    errorMessage:{
+      marginTop: '1rem',
+      color: 'red',
+      fontSize: '1.2rem',
+    }
   }));
   
-  export default function AddCategoryTab({categories,addCategory, removeCategory}) {
+  export default function AddCategoryTab({categories,addCategory, removeCategory, removeError, resetError, addError}) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
   
@@ -59,6 +64,11 @@ function TabPanel(props) {
     const incomeCategories = categories.filter(category=>category.type === 'income');
     const expenseCategories = categories.filter(category=>category.type==='expense');
     
+    useEffect(()=>{
+      return ()=>{
+        resetError();
+      }
+    }, [resetError])
     
     return (
         <>
@@ -69,6 +79,13 @@ function TabPanel(props) {
             <Tab label="지출" {...a11yProps(1)} />
           </Tabs>
         </AppBar>
+        {
+        removeError && ( 
+          <div className={classes.errorMessage}>
+            {removeError}
+          </div>
+        )}
+        
         <TabPanel value={value} index={0} >
           Item One
             <CategoryList categories={incomeCategories} addCategory={addCategory} type='income' removeCategory={removeCategory}/>
@@ -77,7 +94,12 @@ function TabPanel(props) {
           Item Two
             <CategoryList categories={expenseCategories} type='expense' addCategory={addCategory} removeCategory={removeCategory}/>
         </TabPanel> 
-        
+        {
+        addError && ( 
+          <div className={classes.errorMessage}>
+            {addError}
+          </div>
+        )}
       </div>
       </>
     );

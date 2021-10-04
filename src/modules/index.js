@@ -1,20 +1,25 @@
 import {combineReducers} from 'redux';
 import { all } from 'redux-saga/effects';
-import account, {accountSaga} from './account';
+import category, {categorySaga} from './category';
+import record, {recordSaga} from './record';
 import loading from './loading'
 import searchOption from './searchOption';
 import addRecord, {addRecordSaga} from './addRecord';
 import user, {userSaga} from './user';
+import detailRecord, {detailRecordSaga} from './detailRecord';
+
 const rootReducer = combineReducers({
-    account,
+    category,
+    record,
     loading,
     searchOption,
     addRecord,
-    user
+    user,
+    detailRecord
 });
 
 export function* rootSaga(){
-    yield all([accountSaga(), addRecordSaga(),userSaga()])
+    yield all([categorySaga(), addRecordSaga(),userSaga(),recordSaga(),detailRecordSaga()])
 }
 
 export default rootReducer;

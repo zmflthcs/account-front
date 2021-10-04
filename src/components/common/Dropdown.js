@@ -7,7 +7,6 @@ import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
-    margin: theme.spacing(1),
     minWidth: 120,
   },
 }));
@@ -29,14 +28,12 @@ export default function Dropdown({dropdownName, element, onChange, selected }) {
   const handleOpen = () => {
     setOpen(true);
   };
-  console.log(element, selected);
+
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel id="controlled-open-select-label">{dropdownName}</InputLabel>
+        <InputLabel>{dropdownName}</InputLabel>
         <Select
-          labelId="controlled-open-select-label"
-          id="controlled-open-select"
           open={open}
           onClose={handleClose}
           onOpen={handleOpen}

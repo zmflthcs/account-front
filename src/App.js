@@ -1,32 +1,68 @@
-import React from 'react';
-import NavBar from './components/NavBar';
-import './App.css';
-import AccountContainer from './containers/AccountContainer';
-import OptionContainer from './containers/OptionContainer';
-import AddRecord from './page/AddRecord';
+import React, {useEffect} from 'react';
 import { Route, useLocation } from 'react-router-dom';
-import Categories from './page/Categories';
+import './App.css';
+import NavBar from './components/NavBar';
+import AccountRecordPage from './page/AccountRecordPage';
+import AddRecordPage from './page/AddRecordPage';
+import AddCategoryPage from './page/AddCategoryPage';
+import RecordDetailPage from './page/RecordDetailPage';
 import Login from './page/Login';
-import { makeStyles } from '@material-ui/core/styles';
 import OauthHandler from './components/login/OauthHandler';
+import {connect} from 'react-redux';
+import {getCategories} from './modules/category';
+import { Container} from "@material-ui/core";
+import Cookies from 'js-cookie';
+import parseJwt from './lib/parseToken';
+import { setUserInfo } from './modules/user';
+const App=({getCategories, setUserInfo, nickname})=> {
+  
+  /*
+  useEffect(()=>{
+    console.log('get categories');
+    getCategories();
+  },[getCategories]);
+*/
 
-const App=()=> {
+  useEffect(()=>{
+    const token = Cookies.get('token');
+    if(Cookies.get('token')){
+      const parseResult = parseJwt(token);
+      setUserInfo(parseResult.nickname, parseResult.userImage);
+    }
+  },[])
+
   const location = useLocation();
+  
+  /*
   if(location.pathname==='/login'){
     return(<Login/>)
   }
-  return (
+*/
+  if(nickname.length>0){
+    return (
+      <div className="App">
+        <Route path={["/","/addrecord","/categories"]} component={NavBar}></Route>
+        <Container maxWidth='md' style={{marginTop: '5rem'}}>
+          
+          <Route exact path='/' component={AccountRecordPage}/>
+          <Route exact path='/addrecord' component={AddRecordPage}/>
+          <Route exact path='/categories' component={AddCategoryPage}/>
+          <Route exact path='/record/:id' component={RecordDetailPage}/>
+        </Container>
+          <Route component={OauthHandler} path="/oauth/kakao"/>
+      </div>)
+  }else{
+    return(
     <div className="App">
-      <Route path={["/","/addrecord","/categories"]} component={NavBar}></Route>
-      <div>
-        <Route exact path='/' component={OptionContainer}></Route>
-        <Route exact path='/' component={AccountContainer}/>
-        <Route exact path='/addrecord' component={AddRecord}/>
-        <Route exact path='/categories' component={Categories}/>
-        <Route component={OauthHandler} path="/oauth/kakao"/>
-      </div>
+        <Route path={["/","/addrecord","/categories"]} component={NavBar}></Route>
+        <Container maxWidth='md' style={{marginTop: '5rem'}}>
+          <Route path='/' component={Login}/>
+          <Route component={OauthHandler} path="/oauth/kakao"/>
+        </Container>
     </div>
-  );
+    )
+  }
 }
 
-export default App;
+export default connect(({user})=>({
+  nickname: user.nickname}),{getCategories, setUserInfo})(App);

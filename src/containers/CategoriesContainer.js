@@ -1,23 +1,23 @@
 import React, {useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import {getCategories, addCategory,removeCategory} from '../modules/account';
 import {connect} from 'react-redux';
 import AddCategoryTab from '../components/category/AddCategoryTab';
+import {addCategory, removeCategory, resetError} from '../modules/category';
 
-function CategoriesContainer({categories,getCategories,addCategory,categoriesError, removeCategory}){
-    console.log(addCategory);
+function CategoriesContainer({categories,getCategories,addCategory,removeCategoriesError, removeCategory, resetError, addCategoriesError}){
     return(
         <>
-            <AddCategoryTab categories={categories} addCategory={addCategory} getCategories={getCategories} removeCategory={removeCategory}/>
+            <AddCategoryTab categories={categories} removeError={removeCategoriesError}  addCategory={addCategory} removeCategory={removeCategory} resetError={resetError} addError={addCategoriesError}/>
         </>
     )
 }
 
 export default connect(
-    ({account}) => ({
-        categories: account.categories,
-        categoriesError: account.categoriesError
+    ({category}) => ({
+        categories: category.categories,
+        removeCategoriesError: category.removeCategoriesError,
+        addCategoriesError: category.addCategoriesError,
     }),{
-        getCategories, addCategory,removeCategory
-      })(CategoriesContainer);
+        addCategory,removeCategory, resetError
+})(CategoriesContainer);

@@ -11,18 +11,18 @@ import TableRow from '@material-ui/core/TableRow';
 import AddRecordInput from './AddRecordInput';
 
 const columns = [
-  { id: 'content', label: '사용내역', minWidth: 170},
-  { id: 'cost', label: '금액', minWidth: 100, format: (value) => value.toLocaleString('en-US'), },
+  { id: 'content', label: '사용내역', minWidth: 80},
+  { id: 'cost', label: '금액', minWidth: 30, format: (value) => value.toLocaleString('en-US'), },
   {
     id: 'category',
     label: '카테고리',
-    minWidth: 170,
+    minWidth: 85,
     align: 'right',
   },
   {
     id: 'memo',
     label: '메모',
-    minWidth: 190,
+    minWidth: 100,
     align: 'right',
   },
 ];
@@ -58,6 +58,9 @@ export default function AddRecordList({categories, rows, addRecord, removeRecord
                   {column.label}
                 </TableCell>
               ))}
+              <TableCell key={'button'}>
+                  
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

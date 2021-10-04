@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link , useHistory} from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -11,78 +11,22 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
-/*
-interface Column {
-  id: 'name' | 'code' | 'population' | 'size' | 'density';
-  label: string;
-  minWidth?: number;
-  align?: 'right';
-  format?: (value: number) => string;
-}
-*/
-/*
-const columns: Column[] = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-  {
-    id: 'population',
-    label: 'Population',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'density',
-    label: 'Density',
-    minWidth: 170,
-    align: 'right',
-    format: (value: number) => value.toFixed(2),
-  },
-];
-*/
+import category from '../../modules/category';
 
 
-interface Column {
-  id: 'date' | 'type'| 'name' | 'content' | 'cost' ;
-  label: string;
-  minWidth? : number;
-  align? : "center" | "left" | "right" | "inherit" | "justify" | undefined,
-  format? : (value: number) => string;
-}
-const columns: Column[] = [
+const columns = [
   {id: 'date', label: '날짜', minWidth: 120, align: 'center'},
-  {id: 'type', label: '구분', minWidth: 100, align: 'center'},
+  {id: 'category', label: '구분', minWidth: 100, align: 'center'},
   {id: 'content', label: '내용', minWidth: 190, align: 'center'},
-  {id: 'cost', label: '금액', minWidth: 170, align: 'center'}
-]
+  {id: 'cost', label: '금액', minWidth: 170, align: 'center', format: (value) => value.toLocaleString('en-US')}
+];
 
-
-interface Data {
-  date: string;
-  type: string;
-  content: string,
-  cost: number
-}
-
-function createData(date:string, type: string, content: string, cost: number): Data {
-  return { date, type, content, cost };
-}
-
-const data =[1,2,3,4,5,6,7,8,9]
-const time = new Date();
-const rows =   data.map((i)=>createData(time.toDateString(), '지출', '맛', i))
 
 
 const useStyles = makeStyles({
   root: {
     position: 'relative',
+    marginTop: '2rem'
   },
   container: {
     maxHeight: 440,
@@ -92,27 +36,58 @@ const useStyles = makeStyles({
     bottom: '80px',
     right: '20px',
     lineHeight: '0',
+    zIndex: '3',
     '& a': {
       textDecoration: 'none',
       color: 'inherit'
     }
-  }
+  },
+
 });
 
-export default function StickyHeadTable() {
+export default function AccountHistoryList({rows}) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (even, newPage) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
 
+  const historyListItem = (row, column) => {
+    
+    const value = row[column.id];
+    console.log(column.id);
+    if(column.id === 'category'){
+      let text=""
+      value.type==='income' ? text+='수입/' : text+='지출/';
+      text+= value.text;
+      return(
+      <TableCell key={column.id} align={column.align}>
+          {text}
+      </TableCell>
+      );
+    }else{
+      return (
+        <TableCell key={column.id} align={column.align}>
+          {column.format && typeof value === 'number' ? column.format(value) : value}
+        </TableCell>
+        );
+    }
+    
+  };
+  
+  const history= useHistory();
+  
+  const onClickRecord = (id) => {
+    history.push(`/record/${id}`)
+  }
+  console.log(rows);
   return (
     <Paper className={classes.root}>
       <TableContainer className={classes.container}>
@@ -130,18 +105,13 @@ export default function StickyHeadTable() {
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+          <TableBody className={classes.recordBody}>
+            {rows.length && rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'number' ? column.format(value) : value}
-                      </TableCell>
-                    );
-                  })}
+                <TableRow className={classes.recordRow} hover role="checkbox" tabIndex={-1} key={row.id} onClick={()=>onClickRecord(row.id)}>
+                  {columns.map((column) => (
+                    historyListItem(row,column)
+                  ))}
                 </TableRow>
               );
             })}

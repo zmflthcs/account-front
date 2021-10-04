@@ -5,16 +5,15 @@ import CategoriesContainer from '../containers/CategoriesContainer';
 
 const useStyles = makeStyles({})
 
-function AddRecord() {
-  const classes = useStyles();
+function AddCategoryPage() {
     return (
     <div>
-    <Typography component="h1" variant="h4">
-        카테고리
-    </Typography>
+      <Typography component="h1" variant="h5" paragraph>
+          카테고리 추가
+      </Typography>
       <CategoriesContainer/>
     </div>
   );
 }
 
-export default AddRecord;
+export default AddCategoryPage;

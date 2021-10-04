@@ -1,29 +1,22 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import AccountDate from '../components/account/AccountDate';
 import CategoriesDropdown from '../components/account/CategoriesDropdown';
 import IncomeExpenseDropdown from '../components/account/IncomeExpenseDropdown';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import AddCategory from '../components/account/AddCategory';
+import { Grid } from "@material-ui/core";
+import {getRecord} from '../modules/record';
 import {setStartDate, setEndDate,setCategory, setType} from '../modules/searchOption';
-import {getCategories, addCategory} from '../modules/account';
+import { getCategories } from '../modules/category';
 import {connect} from 'react-redux';
 
 
+
+
 const useStyles = makeStyles({
-  optionContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    marginBottom: '1.5rem'
-  },
-  optionElements: {
-    display: 'flex',
-    alignItems: 'center'
-  },
   searchButton: {
-    marginRight: '1rem'
+    marginRight: '1rem',
+    marginTop: '1rem'
   }
 });
 
@@ -33,49 +26,44 @@ const OptionContainer = ({
   typeOption,
   startDateOption,
   endDateOption,
+  setCategory,
+  setType,
   setStartDate,
   setEndDate,
-  setType,
-  setCategory,
-  addCategory
+  getRecord,
+  getCategories
 }) =>{
   
-    const [categoryModalOpen,setCategoryModalOpen] = useState(false)
+
+    const classes = useStyles();
   
-    const classes = useStyles({
-      
-      searchButton: {
-        
-      }
-    });
+    useEffect(()=>{
+    console.log('get categories');
+    getCategories();
+  },[getCategories]);
+
+
+
     return(
-        <div className={classes.optionContainer}>
-        <div className={classes.optionElements}>
-        <IncomeExpenseDropdown selectedType={typeOption} onChange={setType}/>
-        <CategoriesDropdown categories={categories} selectedCategory={categoryOption} onChange={setCategory} type={typeOption}/>
-        <Button
-        variant="contained"
-        color="default"
-        startIcon={<CloudUploadIcon />}
-        onClick={()=>setCategoryModalOpen(true)}
-        >
-        추가
-      </Button>
-        <AccountDate labelName="From" date={startDateOption} setDate={setStartDate}/>
-        <AccountDate labelName="To" date={endDateOption} setDate={setEndDate}/>
-        {<AddCategory open={categoryModalOpen} handleOpen={setCategoryModalOpen} addCategory={addCategory}/>}
-      </div>
-      <Button className={classes.searchButton} variant="contained" color="primary">
-        검색
-      </Button>
-      </div>
+      
+        <Grid container xs={12} justifyContent="flex-end" alignItems="flex-end">
+          <Grid xs={12} sm={6} md={2} ><IncomeExpenseDropdown selectedType={typeOption} onChange={setType}/></Grid>
+          <Grid xs={12} sm={6} md={2}><CategoriesDropdown categories={categories} selectedCategory={categoryOption} onChange={setCategory} type={typeOption}/></Grid>
+          <Grid xs={12} sm={6} md={3}><AccountDate labelName="From" date={startDateOption} setDate={setStartDate}/></Grid>
+          <Grid xs={12} sm={6} md={3}><AccountDate labelName="To" date={endDateOption} setDate={setEndDate}/></Grid>
+          
+          <Button className={classes.searchButton} variant="contained" color="primary" onClick={getRecord}>
+            검색
+          </Button>
+        </Grid>
+      
     )
 }
 
 
 export default connect(
-  ({account, searchOption}) => ({
-    categories: account.categories,
+  ({category, searchOption}) => ({
+    categories: category.categories,
     categoryOption: searchOption.category,
     typeOption: searchOption.type,
     startDateOption: searchOption.startDate,
@@ -85,6 +73,7 @@ export default connect(
     setEndDate,
     setType,
     setCategory,
-    addCategory
+    getRecord,
+    getCategories
   }
 )(OptionContainer);
